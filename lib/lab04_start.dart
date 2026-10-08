@@ -98,14 +98,47 @@ const List<String> kCategories = [
 ];
 
 const List<MenuItem> kMenu = [
-  MenuItem(id: 'm1', name: 'Nasi Goreng Spesial', category: 'Makanan', price: 18000, promo: true),
+  MenuItem(
+    id: 'm1',
+    name: 'Nasi Goreng Spesial',
+    category: 'Makanan',
+    price: 18000,
+    promo: true,
+  ),
   MenuItem(id: 'm2', name: 'Mie Ayam Bakso', category: 'Makanan', price: 15000),
-  MenuItem(id: 'm3', name: 'Sate Ayam (10 tusuk)', category: 'Makanan', price: 25000),
-  MenuItem(id: 'm4', name: 'Ayam Geprek Sambal Matah', category: 'Makanan', price: 20000, promo: true),
-  MenuItem(id: 'm5', name: 'Pisang Goreng Keju', category: 'Camilan', price: 12000),
+  MenuItem(
+    id: 'm3',
+    name: 'Sate Ayam (10 tusuk)',
+    category: 'Makanan',
+    price: 25000,
+  ),
+  MenuItem(
+    id: 'm4',
+    name: 'Ayam Geprek Sambal Matah',
+    category: 'Makanan',
+    price: 20000,
+    promo: true,
+  ),
+  MenuItem(
+    id: 'm5',
+    name: 'Pisang Goreng Keju',
+    category: 'Camilan',
+    price: 12000,
+  ),
   MenuItem(id: 'm6', name: 'Es Teh Manis', category: 'Minuman', price: 5000),
-  MenuItem(id: 'm7', name: 'Kopi Susu Gula Aren', category: 'Minuman', price: 12000),
-  MenuItem(id: 'm8', name: 'Paket Hemat Ayam + Es Teh', category: 'Paket Hemat', price: 23000, promo: true),
+  MenuItem(
+    id: 'm7',
+    name: 'Kopi Susu Gula Aren',
+    category: 'Minuman',
+    price: 12000,
+  ),
+  MenuItem(
+    id: 'm8',
+    name: 'Paket Hemat Ayam + Es Teh',
+    category: 'Paket Hemat',
+    price: 23000,
+    promo: true,
+  ),
 ];
 
 /// Exactly 200 characters. Test 5.
@@ -115,7 +148,13 @@ const String kLongName =
     'dan Taburan Bawang Goreng Renyah Khas Kota Makassar Sulsel';
 
 const List<MenuItem> kLongNameMenu = [
-  MenuItem(id: 'long', name: kLongName, category: 'Makanan', price: 45000, promo: true),
+  MenuItem(
+    id: 'long',
+    name: kLongName,
+    category: 'Makanan',
+    price: 45000,
+    promo: true,
+  ),
   ...kMenu,
 ];
 
@@ -154,7 +193,10 @@ abstract final class AppTheme {
   static ThemeData _build(Brightness brightness) {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: _seed, brightness: brightness),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: _seed,
+        brightness: brightness,
+      ),
     );
   }
 }
@@ -171,12 +213,12 @@ String rupiah(int value) {
 }
 
 IconData iconFor(String category) => switch (category) {
-      'Makanan' => Icons.rice_bowl,
-      'Minuman' => Icons.local_cafe,
-      'Camilan' => Icons.cookie,
-      'Paket Hemat' => Icons.lunch_dining,
-      _ => Icons.restaurant,
-    };
+  'Makanan' => Icons.rice_bowl,
+  'Minuman' => Icons.local_cafe,
+  'Camilan' => Icons.cookie,
+  'Paket Hemat' => Icons.lunch_dining,
+  _ => Icons.restaurant,
+};
 
 class Lab04App extends StatelessWidget {
   const Lab04App({
@@ -197,8 +239,9 @@ class Lab04App extends StatelessWidget {
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
       // Lets you drag horizontal lists with a mouse in Chrome or on desktop.
-      scrollBehavior: const MaterialScrollBehavior()
-          .copyWith(dragDevices: PointerDeviceKind.values.toSet()),
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: PointerDeviceKind.values.toSet(),
+      ),
       home: MenuScreen(items: items),
     );
   }
@@ -223,15 +266,16 @@ class _MenuScreenState extends State<MenuScreen> {
   final Map<String, int> _qty = {};
 
   List<MenuItem> get _visible => widget.items.where((item) {
-        final matchesQuery =
-            _query.isEmpty || item.name.toLowerCase().contains(_query.toLowerCase());
-        final matchesCategory = switch (_category) {
-          'Semua' => true,
-          'Promo' => item.promo,
-          _ => item.category == _category,
-        };
-        return matchesQuery && matchesCategory;
-      }).toList();
+    final matchesQuery =
+        _query.isEmpty ||
+        item.name.toLowerCase().contains(_query.toLowerCase());
+    final matchesCategory = switch (_category) {
+      'Semua' => true,
+      'Promo' => item.promo,
+      _ => item.category == _category,
+    };
+    return matchesQuery && matchesCategory;
+  }).toList();
 
   int get _count => _qty.values.fold(0, (sum, n) => sum + n);
 
@@ -248,9 +292,8 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _order() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Pesanan dikirim: $_count item')),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Pesanan dikirim: $_count item')));
     setState(() => _qty.clear());
   }
 
@@ -258,59 +301,118 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     final visible = _visible;
     final promos = widget.items.where((item) => item.promo).toList();
-    final isTablet = MediaQuery.sizeOf(context).width > 600;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Menu')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const StoreHeader(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Gap.md),
-            child: SearchBar(
-              key: const Key('search-field'),
-              hintText: 'Cari menu…',
-              leading: const Icon(Icons.search),
-              onChanged: (value) => setState(() => _query = value),
-            ),
-          ),
-          const SizedBox(height: Gap.sm),
-          CategoryBar(
-            selected: _category,
-            onSelected: (category) => setState(() => _category = category),
-          ),
-          PromoStrip(first: promos[0], second: promos[1]),
-          Expanded(
-            child: isTablet
-                ? GridView.count(
-                    crossAxisCount: 4,
-                    padding: const EdgeInsets.all(Gap.md),
-                    mainAxisSpacing: Gap.md,
-                    crossAxisSpacing: Gap.md,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isTablet = constraints.maxWidth >= 600;
+
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (final item in visible)
-                        MenuCard(
-                          item: item,
-                          quantity: _qty[item.id] ?? 0,
-                          onAdd: () => _add(item),
+                      const StoreHeader(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: Gap.md),
+                        child: SearchBar(
+                          key: const Key('search-field'),
+                          hintText: 'Cari menu…',
+                          leading: const Icon(Icons.search),
+                          onChanged: (value) => setState(() => _query = value),
                         ),
-                    ],
-                  )
-                : ListView(
-                    children: [
-                      for (final item in visible)
-                        MenuTile(
-                          item: item,
-                          quantity: _qty[item.id] ?? 0,
-                          onAdd: () => _add(item),
-                        ),
+                      ),
+                      const SizedBox(height: Gap.sm),
+                      CategoryBar(
+                        selected: _category,
+                        onSelected: (category) =>
+                            setState(() => _category = category),
+                      ),
+                      if (promos.length >= 2)
+                        PromoStrip(first: promos[0], second: promos[1]),
                     ],
                   ),
-          ),
-        ],
+                ),
+
+                if (visible.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Center(
+                        key: const Key('empty-state'),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            const SizedBox(height: Gap.md),
+                            Text(
+                              'Oops, menu tidak ditemukan.',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            if (_query.isNotEmpty || _category != 'Semua')...[
+                              const SizedBox(height: Gap.md),
+                              FilledButton.tonal(
+                                onPressed: () {
+                                  setState(() {
+                                    _query = '';
+                                    _category = 'Semua';
+                                  });
+                                },
+                                child: const Text('Reset Pencarian'), 
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                else if (isTablet)
+                  SliverPadding(
+                    padding: const EdgeInsets.all(Gap.md),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: Gap.md,
+                            crossAxisSpacing: Gap.md,
+                          ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final item = visible[index];
+                        return MenuCard(
+                          item: item,
+                          quantity: _qty[item.id] ?? 0,
+                          onAdd: () => _add(item),
+                        );
+                      }, childCount: visible.length),
+                    ),
+                  )
+                else
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final item = visible[index];
+                      return MenuTile(
+                        item: item,
+                        quantity: _qty[item.id] ?? 0,
+                        onAdd: () => _add(item),
+                      );
+                    }, childCount: visible.length),
+                  ),
+              ],
+            );
+          },
+        ),
       ),
-      bottomNavigationBar: CartBar(count: _count, total: _total, onOrder: _order),
+      bottomNavigationBar: SafeArea(
+        child: CartBar(count: _count, total: _total, onOrder: _order),
+      ),
     );
   }
 }
@@ -337,20 +439,44 @@ class StoreHeader extends StatelessWidget {
             child: Icon(Icons.storefront, color: cs.onPrimaryContainer),
           ),
           const SizedBox(width: Gap.md),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(kStoreName, style: text.titleMedium),
-              Text(
-                kStoreHours,
-                style: text.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  kStoreName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.titleMedium,
+                ),
+                Text(
+                  kStoreHours,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                ),
+              ],
+            ),
           ),
           const SizedBox(width: Gap.md),
-          Icon(Icons.star_rounded, size: 20, color: cs.tertiary),
-          const SizedBox(width: Gap.xs),
-          Text('4.8 · 1,2 rb ulasan', style: text.labelMedium),
+          // FIX: Wrap the trailing rating elements in Flexible with an overflow strategy
+          Flexible(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.star_rounded, size: 20, color: cs.tertiary),
+                const SizedBox(width: Gap.xs),
+                Flexible(
+                  child: Text(
+                    '4.8 · 1,2 rb ulasan',
+                    style: text.labelMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -358,14 +484,19 @@ class StoreHeader extends StatelessWidget {
 }
 
 class CategoryBar extends StatelessWidget {
-  const CategoryBar({super.key, required this.selected, required this.onSelected});
+  const CategoryBar({
+    super.key,
+    required this.selected,
+    required this.onSelected,
+  });
 
   final String selected;
   final ValueChanged<String> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: Gap.md),
       child: Row(
         children: [
@@ -391,7 +522,8 @@ class PromoStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(Gap.md),
       child: Row(
         children: [
@@ -432,10 +564,14 @@ class PromoCard extends StatelessWidget {
                   letterSpacing: 1.2,
                 ),
               ),
-              const SizedBox(height: Gap.xs),
+              const SizedBox(height: Gap.sm),
               Text(
                 item.name,
-                style: text.titleMedium?.copyWith(color: cs.onTertiaryContainer),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: text.titleMedium?.copyWith(
+                  color: cs.onTertiaryContainer,
+                ),
               ),
               const Spacer(),
               Text(
@@ -473,24 +609,34 @@ class MenuTile extends StatelessWidget {
     return InkWell(
       onTap: onAdd,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Gap.md, vertical: Gap.sm),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Gap.md,
+          vertical: Gap.sm,
+        ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 22,
               backgroundColor: cs.secondaryContainer,
-              child: Icon(iconFor(item.category), color: cs.onSecondaryContainer),
+              child: Icon(
+                iconFor(item.category),
+                color: cs.onSecondaryContainer,
+              ),
             ),
             const SizedBox(width: Gap.md),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.name, style: text.titleMedium),
-                if (item.promo)
-                  Text('Promo', style: text.labelSmall?.copyWith(color: cs.primary)),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.name, style: text.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  if (item.promo)
+                    Text(
+                      'Promo',
+                      style: text.labelSmall?.copyWith(color: cs.primary),
+                    ),
+                ],
+              ),
             ),
-            const Spacer(),
             Text(rupiah(item.price), style: text.labelLarge),
             IconButton(
               tooltip: 'Tambah',
@@ -531,21 +677,27 @@ class MenuCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 110,
-              decoration: BoxDecoration(
-                color: cs.secondaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Icon(
-                iconFor(item.category),
-                size: 40,
-                color: cs.onSecondaryContainer,
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: cs.secondaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Icon(
+                  iconFor(item.category),
+                  size: 40,
+                  color: cs.onSecondaryContainer,
+                ),
               ),
             ),
             const SizedBox(height: Gap.sm),
-            Text(item.name, style: text.titleSmall),
+            Text(
+              item.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: text.titleSmall,
+            ),
             const SizedBox(height: Gap.xs),
             Text(rupiah(item.price), style: text.bodyMedium),
             const SizedBox(height: Gap.sm),
@@ -588,9 +740,13 @@ class CartBar extends StatelessWidget {
         children: [
           Icon(Icons.shopping_bag_outlined, color: cs.onSurfaceVariant),
           const SizedBox(width: Gap.sm),
-          Text(
-            'Pesanan: $count item · Total ${rupiah(total)}',
-            style: text.titleSmall,
+          Flexible(
+            child: Text(
+              'Pesanan: $count item · Total ${rupiah(total)}',
+              style: text.titleSmall,
+              overflow: TextOverflow.clip,
+              maxLines: 2,
+            ),
           ),
           const SizedBox(width: Gap.md),
           SizedBox(
@@ -637,11 +793,11 @@ enum _Data {
   final String label;
 
   List<MenuItem> get items => switch (this) {
-        _Data.normal => kMenu,
-        _Data.longName => kLongNameMenu,
-        _Data.empty => const <MenuItem>[],
-        _Data.big => kBigMenu,
-      };
+    _Data.normal => kMenu,
+    _Data.longName => kLongNameMenu,
+    _Data.empty => const <MenuItem>[],
+    _Data.big => kBigMenu,
+  };
 }
 
 class LabHarness extends StatefulWidget {
@@ -666,7 +822,10 @@ class _LabHarnessState extends State<LabHarness> {
     return MaterialApp(
       title: 'Lab 04 · device harness',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: const Color(0xFF455A64)),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF455A64),
+      ),
       home: Builder(
         builder: (context) => Scaffold(
           body: SafeArea(
@@ -771,8 +930,8 @@ class _LabHarnessState extends State<LabHarness> {
     final padding = !_insets
         ? EdgeInsets.zero
         : _landscape
-            ? const EdgeInsets.only(left: 32, bottom: 20)
-            : const EdgeInsets.only(top: 32, bottom: 20);
+        ? const EdgeInsets.only(left: 32, bottom: 20)
+        : const EdgeInsets.only(top: 32, bottom: 20);
     // While the keyboard is up, phones report no bottom padding.
     final safe = keyboard > 0 ? padding.copyWith(bottom: 0) : padding;
     final media = MediaQuery.of(context).copyWith(
@@ -834,7 +993,9 @@ class _LabHarnessState extends State<LabHarness> {
                             right: 0,
                             bottom: 0,
                             height: safe.bottom,
-                            child: const IgnorePointer(child: _FakeGestureBar()),
+                            child: const IgnorePointer(
+                              child: _FakeGestureBar(),
+                            ),
                           ),
                         if (keyboard > 0)
                           Positioned(
@@ -868,7 +1029,10 @@ class _FakeStatusBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Text('9:41', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+            child: Text(
+              '9:41',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
         Center(
@@ -921,7 +1085,8 @@ class _FakeKeyboard extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    for (final letter in row.split('')) Expanded(child: _Key(letter)),
+                    for (final letter in row.split(''))
+                      Expanded(child: _Key(letter)),
                   ],
                 ),
               ),
